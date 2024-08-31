@@ -8,35 +8,56 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link href="static/styles.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-      body {
-        background-color: #f0f8ff;
-      }
-      .unicorn-img {
-        max-width: 200px;
-        margin-bottom: 20px;
-      }
-      #feedback {
-        font-weight: bold;
-        font-size: 1.2em;
-      }
-      .tafel-checkbox {
-        display: inline-block;
-        margin-right: 10px;
-      }
-    </style>
   </head>
   <body>
     <div class="container mt-5">
       <div class="row justify-content-center">
         <div class="col-md-6 text-center">
-          <h1 class="mb-4">Tafels Oefenen speciaal voor Mae</h1>
+          <h1 class="mb-4">Tafels Oefenen met Eenhoorn</h1>
           <img
             src="https://example.com/unicorn.png"
             alt="Eenhoorn"
             class="unicorn-img"
           />
+
+          <div class="mb-3">
+            <label class="form-label">Wie gaat er oefenen?</label>
+            <div class="d-flex justify-content-center">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="oefenaar"
+                  id="mae"
+                  value="Mae"
+                />
+                <label class="form-check-label" for="mae">Mae</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="oefenaar"
+                  id="lenn"
+                  value="Lenn"
+                />
+                <label class="form-check-label" for="lenn">Lenn</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="oefenaar"
+                  id="papa"
+                  value="Papa"
+                />
+                <label class="form-check-label" for="papa">Papa</label>
+              </div>
+            </div>
+          </div>
+
           <div class="mb-3">
             <label class="form-label"
               >Kies de tafels die je wilt oefenen:</label
@@ -45,6 +66,7 @@
               <!-- Checkboxes worden hier dynamisch toegevoegd -->
             </div>
           </div>
+
           <div class="mb-3">
             <label for="timer" class="form-label">Oefentijd (minuten):</label>
             <input
@@ -56,15 +78,15 @@
               value="5"
             />
           </div>
+
           <button onclick="startOefening()" class="btn btn-primary mb-3">
             Start
           </button>
+
           <div id="oefening" style="display: none">
             <h2 id="vraag" class="mb-3"></h2>
             <input type="number" id="antwoord" class="form-control mb-3" />
             <p id="feedback" class="mb-3"></p>
-            <p id="score" class="mb-3"></p>
-            <p id="tijd" class="mb-3"></p>
           </div>
         </div>
       </div>
@@ -75,20 +97,27 @@
       let juisteAntwoord;
       let timerInterval;
       let gekozenTafels = [];
+      let oefenaar = "";
 
       $(document).ready(function () {
         // Voeg checkboxes toe voor tafels 1 t/m 10
         for (let i = 1; i <= 10; i++) {
           $("#tafel-keuzes").append(`
-            <div class="tafel-checkbox form-check form-check-inline">
-              <input type="checkbox" id="tafel${i}" value="${i}" class="tafel-check form-check-input">
-              <label class="form-check-label" for="tafel${i}">${i}</label>
-            </div>
-          `);
+                    <div class="tafel-checkbox form-check form-check-inline">
+                        <input type="checkbox" id="tafel${i}" value="${i}" class="tafel-check form-check-input">
+                        <label class="form-check-label" for="tafel${i}">${i}</label>
+                    </div>
+                `);
         }
       });
 
       function startOefening() {
+        oefenaar = $("input[name='oefenaar']:checked").val();
+        if (!oefenaar) {
+          alert("Kies alsjeblieft wie er gaat oefenen.");
+          return;
+        }
+
         gekozenTafels = $(".tafel-check:checked")
           .map(function () {
             return parseInt(this.value);
@@ -103,6 +132,7 @@
         correcteAntwoorden = 0;
         totaleVragen = 0;
         $("#oefening").show();
+        $("h1").text(`Tafels Oefenen voor ${oefenaar}`);
         nieuweVraag();
         startTimer();
       }
@@ -130,28 +160,21 @@
             .removeClass("text-success")
             .addClass("text-danger");
         }
-        updateScore();
         setTimeout(function () {
           $("#feedback").text("");
           nieuweVraag();
         }, 1000);
       }
 
-      function updateScore() {
-        $("#score").text(`Score: ${correcteAntwoorden} / ${totaleVragen}`);
-      }
-
       function startTimer() {
         let tijd = $("#timer").val() * 60;
-        $("#tijd").text(`Tijd over: ${tijd} seconden`);
         timerInterval = setInterval(function () {
           tijd--;
-          $("#tijd").text(`Tijd over: ${tijd} seconden`);
           if (tijd <= 0) {
             clearInterval(timerInterval);
             $("#oefening").hide();
             alert(
-              `Oefening afgelopen! Je hebt ${correcteAntwoorden} van de ${totaleVragen} vragen goed beantwoord.`
+              `Oefening afgelopen! ${oefenaar} heeft ${correcteAntwoorden} van de ${totaleVragen} vragen goed beantwoord.`
             );
           }
         }, 1000);
