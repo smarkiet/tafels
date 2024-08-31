@@ -15,48 +15,7 @@
     <div class="container mt-5">
       <div class="row justify-content-center">
         <div class="col-md-6 text-center">
-          <h1 class="mb-4">Tafels Oefenen met Eenhoorn</h1>
-          <img
-            src="https://example.com/unicorn.png"
-            alt="Eenhoorn"
-            class="unicorn-img"
-          />
-
-          <div class="mb-3">
-            <label class="form-label">Wie gaat er oefenen?</label>
-            <div class="d-flex justify-content-center">
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="oefenaar"
-                  id="mae"
-                  value="Mae"
-                />
-                <label class="form-check-label" for="mae">Mae</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="oefenaar"
-                  id="lenn"
-                  value="Lenn"
-                />
-                <label class="form-check-label" for="lenn">Lenn</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="oefenaar"
-                  id="papa"
-                  value="Papa"
-                />
-                <label class="form-check-label" for="papa">Papa</label>
-              </div>
-            </div>
-          </div>
+          <h1 class="mb-4">Tafels oefenen</h1>
 
           <div class="mb-3">
             <label class="form-label"
@@ -68,15 +27,12 @@
           </div>
 
           <div class="mb-3">
-            <label for="timer" class="form-label">Oefentijd (minuten):</label>
-            <input
-              type="number"
-              id="timer"
-              class="form-control"
-              min="1"
-              max="60"
-              value="5"
-            />
+            <label class="form-label"
+              >Kies de tafels die je wilt oefenen:</label
+            >
+            <div id="tafel-keuzes">
+              <!-- Checkboxes worden hier dynamisch toegevoegd -->
+            </div>
           </div>
 
           <button onclick="startOefening()" class="btn btn-primary mb-3">
@@ -97,7 +53,6 @@
       let juisteAntwoord;
       let timerInterval;
       let gekozenTafels = [];
-      let oefenaar = "";
 
       $(document).ready(function () {
         // Voeg checkboxes toe voor tafels 1 t/m 10
@@ -112,12 +67,6 @@
       });
 
       function startOefening() {
-        oefenaar = $("input[name='oefenaar']:checked").val();
-        if (!oefenaar) {
-          alert("Kies alsjeblieft wie er gaat oefenen.");
-          return;
-        }
-
         gekozenTafels = $(".tafel-check:checked")
           .map(function () {
             return parseInt(this.value);
@@ -132,7 +81,6 @@
         correcteAntwoorden = 0;
         totaleVragen = 0;
         $("#oefening").show();
-        $("h1").text(`Tafels Oefenen voor ${oefenaar}`);
         nieuweVraag();
         startTimer();
       }
@@ -163,20 +111,6 @@
         setTimeout(function () {
           $("#feedback").text("");
           nieuweVraag();
-        }, 1000);
-      }
-
-      function startTimer() {
-        let tijd = $("#timer").val() * 60;
-        timerInterval = setInterval(function () {
-          tijd--;
-          if (tijd <= 0) {
-            clearInterval(timerInterval);
-            $("#oefening").hide();
-            alert(
-              `Oefening afgelopen! ${oefenaar} heeft ${correcteAntwoorden} van de ${totaleVragen} vragen goed beantwoord.`
-            );
-          }
         }, 1000);
       }
 
