@@ -22,12 +22,9 @@
             <div id="tafel-keuzes">
               <!-- Checkboxes worden hier dynamisch toegevoegd -->
             </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Kies de tafels die je wil oefenen:</label>
-            <div id="tafel-keuzes">
-              <!-- Checkboxes worden hier dynamisch toegevoegd -->
+            <div class="mt-2">
+              <button onclick="selectAlleTafels()" class="btn btn-secondary btn-sm">Alles selecteren</button>
+              <button onclick="deselectAlleTafels()" class="btn btn-secondary btn-sm">Alles deselecteren</button>
             </div>
           </div>
 
@@ -51,8 +48,7 @@
       let gekozenTafels = [];
 
       $(document).ready(function () {
-        // Voeg checkboxes toe voor tafels 1 t/m 10
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 1; i <= 12; i++) {
           $("#tafel-keuzes").append(`
                     <div class="tafel-checkbox form-check form-check-inline">
                         <input type="checkbox" id="tafel${i}" value="${i}" class="tafel-check form-check-input">
@@ -116,6 +112,14 @@
           return false;
         }
       });
+
+      function selectAlleTafels() {
+        $(".tafel-check").prop("checked", true);
+      }
+
+      function deselectAlleTafels() {
+        $(".tafel-check").prop("checked", false);
+      }
     </script>
   </body>
 </html>
